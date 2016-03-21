@@ -2,6 +2,30 @@
   <h2>These people use our service, you should too.</h2>
 </div>
 
+<%= form_for @new_user, "users", fn f -> %>
+<%= if @new_user.errors != [] do %>
+<p class="alert-danger">Oops, something went wrong!</p>
+<% end %>
+
+<p>
+  <label>
+    <span>Handle:</span>
+    <%= text_input f, :name%>
+  </label>
+</p>
+
+<p>
+  <label>
+    <span>Email:</span>
+    <%= email_input f, :email%>
+  </label>
+</p>
+
+<p>
+  <%= submit "Submit" %>
+</p>
+<% end %>
+
 <table class="table-responsive">
   <thead>
     <th>Name</th>
