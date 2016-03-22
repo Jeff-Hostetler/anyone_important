@@ -20,7 +20,7 @@ defmodule AnyoneImportant.Mixfile do
   def application do
     [mod: {AnyoneImportant, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex]]
+                    :phoenix_ecto, :postgrex, :extwitter]]
   end
 
   # Specifies which paths to compile per environment.
@@ -38,7 +38,10 @@ defmodule AnyoneImportant.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.9"},
      {:espec_phoenix, "~> 0.2.0", only: :test, app: false},
-     {:cowboy, "~> 1.0"}]
+     {:espec, "~> 0.8.16", only: :test},
+     {:cowboy, "~> 1.0"},
+     {:oauth, github: "tim/erlang-oauth"},
+     {:extwitter, "~> 0.6"}]
   end
 
   # Aliases are shortcut or tasks specific to the current project.

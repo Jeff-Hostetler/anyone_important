@@ -1,5 +1,8 @@
 use Mix.Config
 
+#import api keys that are useful in all environments
+import_config "secrets.exs"
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
