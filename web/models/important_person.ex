@@ -1,13 +1,12 @@
-defmodule AnyoneImportant.User do
+defmodule AnyoneImportant.ImportantPerson do
   use AnyoneImportant.Web, :model
   require Ecto.Queryable
 
-  schema "users" do
-    field :name, :string
-    field :email, :string
+  schema "important_persons" do
+    field :handle, :string
   end
 
-  @required_fields ~w(name email)
+  @required_fields ~w(handle)
   @optional_fields ~w()
 
   def changeset(model, params \\ :empty) do

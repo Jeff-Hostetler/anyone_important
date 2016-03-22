@@ -12,7 +12,7 @@ defmodule AnyoneImportant do
       # Start the Ecto repository
       supervisor(AnyoneImportant.Repo, []),
       # Here you could define other workers and supervisors as children
-      # worker(AnyoneImportant.Worker, [arg1, arg2, arg3]),
+      worker(AnyoneImportant.TweetWorker, []),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
