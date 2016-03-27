@@ -41,6 +41,7 @@ defmodule AnyoneImportant.Mixfile do
      {:espec, "~> 0.8.16", only: :test},
      {:cowboy, "~> 1.0"},
      {:oauth, github: "tim/erlang-oauth"},
+     {:mailgun, "~> 0.1.2"},
      {:extwitter, "~> 0.6"}]
   end
 

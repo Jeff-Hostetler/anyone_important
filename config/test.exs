@@ -19,4 +19,6 @@ config :anyone_important, AnyoneImportant.Repo,
   password: "postgres",
   database: "anyone_important_test",
   hostname: "localhost",
+  mailgun_domain: "test.org",
+  mailgun_key: "secret-key",
   pool: Ecto.Adapters.SQL.Sandbox

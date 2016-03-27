@@ -1,6 +1,7 @@
 defmodule AnyoneImportant.TweetWorker do
   use GenServer
   alias AnyoneImportant.TwitterService
+  alias AnyoneImportant.EmailService
   alias AnyoneImportant.User
   alias AnyoneImportant.ImportantPerson
   alias AnyoneImportant.Repo
@@ -15,28 +16,25 @@ defmodule AnyoneImportant.TweetWorker do
   end
 
   def handle_info(:work, state) do
-    # Do the work you desire here
-
-    user_handles = Repo.all(User)
-    |> Enum.map(fn(user) -> user.name end)
+    users = Repo.all(User)
 
     important_people_handles = Repo.all(ImportantPerson)
     |> Enum.map(fn(person) -> person.handle end)
 
     Enum.each(important_people_handles, fn(important_handle) ->
-      Enum.each(user_handles, fn(user_handle) ->
-        tweets = TwitterService.search("#{important_handle}:", user_handle)
+      Enum.each(users, fn(user) ->
+        tweets = TwitterService.search("#{important_handle}:", user.name)
 
         first_record = List.first(tweets)
 
         if first_record != nil do
-          IO.puts first_record
+          EmailService.send(user.email, first_record)
         end
       end)
     end)
 
     # Start the timer again
-    Process.send_after(self(), :work, 30 * 1000) # In 30 seconds
+    Process.send_after(self(), :work, 3 * 60 * 1000) # In 3 minutes
 
     {:noreply, state}
   end
