@@ -10,9 +10,7 @@ config :anyone_important, AnyoneImportant.Endpoint,
 # Configure your database
 config :anyone_important, AnyoneImportant.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: System.get_env("DB_USERNAME"),
-  password: System.get_env("DB_PASSWORD"),
-  database: "anyone_important_prod",
+  url: System.get_env("DATABASE_URL"),
   pool_size: 20
 
 config :extwitter, :oauth, [
