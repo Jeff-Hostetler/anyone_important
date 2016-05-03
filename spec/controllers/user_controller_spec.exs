@@ -4,11 +4,6 @@ defmodule AnyoneImportant.UserControllerSpec do
   alias AnyoneImportant.Repo
 
   describe "index" do
-    let :user do
-      %User{name: "J Hizzo", email: "jhizzo@example.com"}
-      |> Repo.insert
-    end
-
     let :all_users do
       Repo.all(User)
     end

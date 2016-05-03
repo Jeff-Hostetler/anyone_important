@@ -7,7 +7,6 @@ defmodule AnyoneImportant.UserController do
 
   def index(conn, _params) do
     conn
-    |> put_flash(:info, "You are now on the list.")
     |> assign(:all_users, Repo.all(User))
     |> assign(:new_user, User.changeset(%User{}))
     |> render("index.html")
