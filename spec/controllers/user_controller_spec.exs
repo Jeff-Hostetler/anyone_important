@@ -23,10 +23,8 @@ defmodule AnyoneImportant.UserControllerSpec do
 
   describe "create" do
     subject do: action(:create, %{"user" => %{"name" => "My Guy", "email" => "test@example.com"}})
-
     it do: should have_in_flash info: "You are now on the list."
     it do: should be_redirection
-
 
     it "creates the user with valid params" do
        action(:create, %{"user" => %{"name" => "My Guy", "email" => "test@example.com"}})

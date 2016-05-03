@@ -29,12 +29,14 @@ defmodule AnyoneImportant.TweetWorker do
 
         if first_record != nil do
           EmailService.send(user.email, first_record)
+          user = Ecto.Changeset.change user, last_email_sent_at: Ecto.DateTime.utc
+          Repo.update user
         end
       end)
     end)
 
     # Start the timer again
-    Process.send_after(self(), :work, 3 * 60 * 1000) # In 3 minutes
+    Process.send_after(self(), :work, 60 * 60 * 1000) # In 1 hour
 
     {:noreply, state}
   end

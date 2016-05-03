@@ -25,10 +25,31 @@ defmodule AnyoneImportant.TweetWorkerSpec do
 
       %ImportantPerson{handle: important_person_handle}
       |> Repo.insert!
-
-      TweetWorker.handle_info(:work, %{})
     end
 
-    it do: expect EmailService |> to(accepted :send)
+    it "updates the user email_date to now"do
+      TweetWorker.handle_info(:work, %{})
+
+      updated_user = Repo.all(User)
+        |> Enum.filter(fn(user) -> user.email == user_email end)
+        |> List.first
+
+
+      expect EmailService |> to(accepted :send)
+      expect(updated_user.last_email_sent_at).to_not eq(nil)
+#      try be_close_to
+    end
+
+    it "does not send emails to users that have an email sent in the last day" do
+      user = Repo.all(User)
+              |> Enum.filter(fn(user) -> user.email == user_email end)
+              |> List.first
+       user = Ecto.Changeset.change user, last_email_sent_at: Ecto.DateTime.utc
+       Repo.update user
+
+       TweetWorker.handle_info(:work, %{})
+
+       expect EmailService |> to(accepted :send)
+    end
   end
 end

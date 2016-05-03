@@ -5,10 +5,11 @@ defmodule AnyoneImportant.User do
   schema "users" do
     field :name, :string
     field :email, :string
+    field :last_email_sent_at, Ecto.DateTime
   end
 
   @required_fields ~w(name email)
-  @optional_fields ~w()
+  @optional_fields ~w(last_email_sent_at)
 
   def changeset(model, params \\ :empty) do
     model
