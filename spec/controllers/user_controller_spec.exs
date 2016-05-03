@@ -22,8 +22,8 @@ defmodule AnyoneImportant.UserControllerSpec do
         %{"user" => %{"name" => "My Guy", "email" => "test@example.com"}}
       )
 
-      expect create_action |> to(have_in_flash(info: "You are now on the list."))
-      expect create_action |> to(be_redirection)
+      expect(create_action)|> to(have_in_flash(info: "You are now on the list."))
+      expect(create_action)|> to(be_redirection)
       expect(Enum.count(Repo.all(User))).to eq 1
 
       created_user = Repo.get_by(User, name: "My Guy")

@@ -7,7 +7,7 @@ defmodule AnyoneImportant.TweetWorkerSpec do
   alias AnyoneImportant.ImportantPerson
   alias AnyoneImportant.Repo
 
-  context "worker runs" do
+  describe "handle_info" do
     let :important_person_handle, do: "@bigdog"
     let :user_handle, do: "@lilsqueeker"
     let :user_email, do: "lilsqueak@example.com"
@@ -37,7 +37,6 @@ defmodule AnyoneImportant.TweetWorkerSpec do
 
       expect EmailService |> to(accepted :send)
       expect(updated_user.last_email_sent_at).to_not eq(nil)
-#      try be_close_to
     end
 
     it "does not send emails to users that have an email sent in the last day" do
