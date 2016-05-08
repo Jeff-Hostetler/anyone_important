@@ -1,5 +1,6 @@
 defmodule AnyoneImportant.TweetWorker do
   use GenServer
+  import Ecto.Query
   alias AnyoneImportant.TwitterService
   alias AnyoneImportant.EmailService
   alias AnyoneImportant.User
@@ -16,7 +17,10 @@ defmodule AnyoneImportant.TweetWorker do
   end
 
   def handle_info(:work, state) do
-    users = Repo.all(User)
+    query = from u in User,
+        where: u.last_email_sent_at < datetime_add(^Ecto.DateTime.utc, -1, "day") or is_nil(u.last_email_sent_at)
+
+    users = Repo.all(query)
 
     important_people_handles = Repo.all(ImportantPerson)
     |> Enum.map(fn(person) -> person.handle end)
