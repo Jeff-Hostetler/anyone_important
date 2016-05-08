@@ -10,10 +10,10 @@ defmodule AnyoneImportant.TweetWorkerSpec do
 
   describe "handle_info" do
     let :user_email, do: "lilsqueak@example.com"
+    let :matching_tweet, do: "RT @kanyewest: Please: Do everything you possibly can in one lifetime."
 
     before do
       important_person_handle = "@bigdog"
-      matching_tweet = "RT @kanyewest: Please: Do everything you possibly can in one lifetime."
       search_results = [matching_tweet, "I feel like @kanyewest. Know its crazy crazy but one day bro.. one day"]
       
       allow(TwitterService).to accept(:search, fn(important_person_handle, "@lilsqueeker") -> search_results end)
@@ -33,11 +33,8 @@ defmodule AnyoneImportant.TweetWorkerSpec do
         |> Enum.filter(fn(user) -> user.email == user_email end)
         |> List.first
 
-
-      expect EmailService |> to(accepted :send)
-      #with what arguments?
-      expect(updated_user.last_email_sent_at).to_not eq(nil)
-      #be close to if I knew how to express 1.second in Elixir
+      expect EmailService |> to(accepted :send, [user_email, matching_tweet])
+      Timex.diff(updated_user.last_email_sent_at, DateTime.now, :sec) |> should(be_close_to 0, 1)
     end
 
     it "sends if last_email sent is more than a day in the past" do
@@ -49,7 +46,7 @@ defmodule AnyoneImportant.TweetWorkerSpec do
 
       TweetWorker.handle_info(:work, %{})
 
-      expect EmailService |> to(accepted :send)
+      expect(EmailService).to accepted :send
     end
 
     it "does not send emails to users that have an email sent in the last day" do
