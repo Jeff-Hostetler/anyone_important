@@ -19,6 +19,8 @@ defmodule AnyoneImportant.Web do
   def model do
     quote do
       use Ecto.Schema
+      use Ecto.Model
+      use Timex.Ecto.Timestamps
 
       import Ecto
       import Ecto.Changeset

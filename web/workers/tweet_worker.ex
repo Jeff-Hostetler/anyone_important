@@ -1,5 +1,6 @@
 defmodule AnyoneImportant.TweetWorker do
   use GenServer
+  use Timex
   import Ecto.Query
   alias AnyoneImportant.TwitterService
   alias AnyoneImportant.EmailService
@@ -18,7 +19,7 @@ defmodule AnyoneImportant.TweetWorker do
 
   def handle_info(:work, state) do
     query = from u in User,
-        where: u.last_email_sent_at < datetime_add(^Ecto.DateTime.utc, -1, "day") or is_nil(u.last_email_sent_at)
+        where: u.last_email_sent_at < datetime_add(^DateTime.now, -1, "day") or is_nil(u.last_email_sent_at)
 
     users = Repo.all(query)
 
@@ -33,7 +34,7 @@ defmodule AnyoneImportant.TweetWorker do
 
         if first_record != nil do
           EmailService.send(user.email, first_record)
-          user = Ecto.Changeset.change user, last_email_sent_at: Ecto.DateTime.utc
+          user = Ecto.Changeset.change user, last_email_sent_at: DateTime.now
           Repo.update user
         end
       end)

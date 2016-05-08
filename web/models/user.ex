@@ -1,11 +1,12 @@
 defmodule AnyoneImportant.User do
   use AnyoneImportant.Web, :model
+  use Timex
   require Ecto.Queryable
 
   schema "users" do
     field :name, :string
     field :email, :string
-    field :last_email_sent_at, Ecto.DateTime
+    field :last_email_sent_at, Timex.Ecto.DateTime
   end
 
   @required_fields ~w(name email)

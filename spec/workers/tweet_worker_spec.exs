@@ -1,5 +1,6 @@
 defmodule AnyoneImportant.TweetWorkerSpec do
   use ESpec
+  use Timex
   alias AnyoneImportant.TweetWorker
   alias AnyoneImportant.TwitterService
   alias AnyoneImportant.EmailService
@@ -39,28 +40,28 @@ defmodule AnyoneImportant.TweetWorkerSpec do
       #be close to if I knew how to express 1.second in Elixir
     end
 
-    it "does not send emails to users that have an email sent in the last day" do
-      user = Repo.all(User)
-              |> Enum.filter(fn(user) -> user.email == user_email end)
-              |> List.first
-       user = Ecto.Changeset.change user, last_email_sent_at: Ecto.DateTime.utc
-       Repo.update user
-
-       TweetWorker.handle_info(:work, %{})
-
-       expect EmailService |> to_not(accepted :send)
-    end
-
     it "sends if last_email sent is more than a day in the past" do
       user = Repo.all(User)
               |> Enum.filter(fn(user) -> user.email == user_email end)
               |> List.first
-      user = Ecto.Changeset.change user, last_email_sent_at: Timex.shift(Date.today, days: -2)
+      user = Ecto.Changeset.change user, last_email_sent_at: Timex.shift(DateTime.now, days: -2)
       Repo.update user
 
       TweetWorker.handle_info(:work, %{})
 
       expect EmailService |> to(accepted :send)
+    end
+
+    it "does not send emails to users that have an email sent in the last day" do
+      user = Repo.all(User)
+              |> Enum.filter(fn(user) -> user.email == user_email end)
+              |> List.first
+       user = Ecto.Changeset.change user, last_email_sent_at: DateTime.now
+       Repo.update user
+
+       TweetWorker.handle_info(:work, %{})
+
+       expect EmailService |> to_not(accepted :send)
     end
   end
 end

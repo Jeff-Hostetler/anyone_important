@@ -20,7 +20,7 @@ defmodule AnyoneImportant.Mixfile do
   def application do
     [mod: {AnyoneImportant, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :extwitter]]
+                    :phoenix_ecto, :postgrex, :extwitter, :timex, :timex_ecto]]
   end
 
   # Specifies which paths to compile per environment.
@@ -42,6 +42,8 @@ defmodule AnyoneImportant.Mixfile do
      {:cowboy, "~> 1.0"},
      {:oauth, github: "tim/erlang-oauth"},
      {:mailgun, "~> 0.1.2"},
+     {:timex, "~> 2.0.0"},
+     {:timex_ecto, "~> 1.0.0"},
      {:extwitter, "~> 0.6"}]
   end
 
