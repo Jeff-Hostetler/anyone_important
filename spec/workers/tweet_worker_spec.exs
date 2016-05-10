@@ -10,16 +10,17 @@ defmodule AnyoneImportant.TweetWorkerSpec do
 
   describe "handle_info" do
     let :user_email, do: "lilsqueak@example.com"
+    let :user_handle, do: "@lilsqueeker"
+    let :important_person_handle, do: "@bigdog"
     let :matching_tweet, do: "RT @kanyewest: Please: Do everything you possibly can in one lifetime."
 
     before do
-      important_person_handle = "@bigdog"
       search_results = [matching_tweet, "I feel like @kanyewest. Know its crazy crazy but one day bro.. one day"]
       
       allow(TwitterService).to accept(:search, fn(important_person_handle, "@lilsqueeker") -> search_results end)
       allow(EmailService).to accept(:send, fn(user_email, matching_tweet) -> nil end)
 
-      %User{name: "@lilsqueeker", email: user_email}
+      %User{name: user_handle, email: user_email}
       |> Repo.insert!
 
       %ImportantPerson{handle: important_person_handle}
@@ -34,6 +35,8 @@ defmodule AnyoneImportant.TweetWorkerSpec do
         |> List.first
 
       expect EmailService |> to(accepted :send, [user_email, matching_tweet])
+      expect(TwitterService).to accepted(:search, ["#{important_person_handle}:", user_handle])
+
       Timex.diff(updated_user.last_email_sent_at, DateTime.now, :sec) |> should(be_close_to 0, 1)
     end
 
@@ -58,6 +61,7 @@ defmodule AnyoneImportant.TweetWorkerSpec do
 
        TweetWorker.handle_info(:work, %{})
 
+       expect TwitterService |> to_not(accepted :search)
        expect EmailService |> to_not(accepted :send)
     end
   end
