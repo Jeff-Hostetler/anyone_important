@@ -16,7 +16,6 @@
       <header class="header">
         <nav role="navigation">
           <ul class="nav nav-pills pull-right">
-            <li><a href="/help">How to Elixir/Phoenix</a></li>
             <li><a href="/users">Users</a></li>
           </ul>
         </nav>
